@@ -208,6 +208,15 @@ class WalletNotifier extends StateNotifier<WalletState> {
     await _storage.setLanguage(lang);
     state = state.copyWith(language: lang);
   }
+
+  /// Resets the wallet and removes stored keys
+  Future<void> resetWallet() async {
+    if (_ldk.isInitialized) {
+      _ldk.stopNode();
+    }
+    await _storage.deleteWallet();
+    state = WalletState.initial().copyWith(isLoading: false);
+  }
 }
 
 final walletProvider =

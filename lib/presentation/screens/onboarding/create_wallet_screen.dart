@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../providers/wallet_providers.dart';
+import '../../widgets/reliq_button.dart';
 import 'backup_seed_screen.dart';
 
 class CreateWalletScreen extends ConsumerStatefulWidget {
@@ -35,33 +36,34 @@ class _CreateWalletScreenState extends ConsumerState<CreateWalletScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('Backup Recovery Phrase'),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: AppColors.voiceAmber.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.voiceAmber.withOpacity(0.5)),
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border),
                 ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.warning_amber_rounded, color: AppColors.voiceAmber, size: 28),
-                    const SizedBox(width: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 20),
+                    SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Write down these 12 words on paper in exact order. Anyone with these words can take your funds.',
+                        'Write down these 12 words on paper in exact order. Anyone with these words can spend your funds.',
                         style: TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 13,
-                          fontWeight: FontWeight.w600,
                           height: 1.4,
                         ),
                       ),
@@ -69,11 +71,11 @@ class _CreateWalletScreenState extends ConsumerState<CreateWalletScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               if (_words.isEmpty)
                 const Expanded(
                   child: Center(
-                    child: CircularProgressIndicator(color: AppColors.lightningGold),
+                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.textPrimary),
                   ),
                 )
               else
@@ -83,44 +85,35 @@ class _CreateWalletScreenState extends ConsumerState<CreateWalletScreen> {
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 2.8,
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
                     ),
                     itemBuilder: (context, index) {
                       return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
                           color: AppColors.surface,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: AppColors.border),
                         ),
                         child: Row(
                           children: [
-                            Container(
-                              width: 24,
-                              height: 24,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: AppColors.border.withOpacity(0.5),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Text(
-                                '${index + 1}',
-                                style: const TextStyle(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            Text(
+                              '${index + 1}.',
+                              style: const TextStyle(
+                                color: AppColors.textMuted,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 _words[index],
                                 style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.textPrimary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
@@ -131,8 +124,10 @@ class _CreateWalletScreenState extends ConsumerState<CreateWalletScreen> {
                   ),
                 ),
               const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _words.isEmpty
+              ReliqButton(
+                label: 'I Have Written Them Down',
+                variant: ReliqButtonVariant.primary,
+                onTap: _words.isEmpty
                     ? null
                     : () {
                         Navigator.push(
@@ -145,7 +140,6 @@ class _CreateWalletScreenState extends ConsumerState<CreateWalletScreen> {
                           ),
                         );
                       },
-                child: const Text('I Have Written Them Down'),
               ),
             ],
           ),
